@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta de Informe Mensual Dinámico</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="main-title">Propuesta de informe mensual dinámico</h1>
+    <hr class="divider">
+
+    <h2 class="section-title">Precios internacionales e índice de precios de las exportaciones argentinas de minerales</h2>
+
+    <p class="subtitle"><strong>MES Y AÑO</strong> - Dirección Nacional de Promoción y Economía Minera</p>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Precios a Mayo 2026<sup>1</sup></th>
+            <th>Oro<br>(USD/Ozt)</th>
+            <th>Plata<br>(USD/Ozt)</th>
+            <th>Cobre<br>(USD/tn)</th>
+            <th>Carb. de litio<br>(USD/tn)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-header">Precio</td>
+            <td>4.587</td>
+            <td>78,0</td>
+            <td>13.543</td>
+            <td>23.816</td>
+          </tr>
+          <tr>
+            <td class="row-header">Var. % i.a.</td>
+            <td>38,6%</td>
+            <td>138,1%</td>
+            <td>42,1%</td>
+            <td>170,6%</td>
+          </tr>
+          <tr>
+            <td class="row-header">Var. % m/m</td>
+            <td>-2,8%</td>
+            <td>2,8%</td>
+            <td>4,6%</td>
+            <td>12,0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="source">Fuente: DNPyEM con base en Banco Mundial y <u>Fastmarkets</u>.</p>
+
+    <p class="content-text">
+      Durante el mes de mayo el oro promedió los 4.587 USD/Ozt, lo que representó una disminución del 2,8% intermensual y un crecimiento del 38,6% en términos interanuales. El precio promedio del oro en los cinco meses de 2026 alcanzó los 4.787 USD/Ozt, siendo este valor un 58,4% superior al precio promedio del mismo período de 2025 (3.023 USD/Ozt).
+      <br><br>
+      El precio de la plata en el mes de mayo promedió los 78,0 USD/Ozt, teniendo una suba del 2,8% con respecto al mes anterior y una variación positiva del 138,1% con respecto a mayo de 2025. El precio promedio de la plata en los cinco meses de 2026 alcanzó los 81,2 USD/Ozt, siendo este valor un 152,4% superior al precio promedio del mismo período de 2025 (32,1 USD/Ozt).
+    </p>
+
+    <h2 class="section-titleGrafico"><br>Precios internacionales de los minerales</h2>
+
+    <!-- Contenedor de Botones de Interacción -->
+    <div class="controls-container">
+      <button class="btn-metric active" data-value="oro">Precio Oro</button>
+      <button class="btn-metric" data-value="plata">Precio Plata</button>
+      <button class="btn-metric" data-value="cobre">Precio Cobre</button>
+      <button class="btn-metric" data-value="litio">Precio Litio</button>
+    </div>
+
+    <!-- Primer Gráfico (app.js) -->
+    <div id="chart"></div>
+    <p class="source">Fuente: DNPyEM con base en Banco Mundial y CME Group</p>
+
+    <p class="content-text">
+      El precio del cobre en el mes de mayo promedió los 13.543 USD/tn, lo que representa un aumento del 4,6% con respecto al mes anterior y un crecimiento del 42,1% con respecto a mayo de 2025. El precio promedio del cobre en los cinco meses de 2026 alcanzó los 12.997 USD/tn, siendo este valor un 38,9% superior al precio promedio del mismo período de 2025 (9.356 USD/tn).
+      <br><br>
+      El precio del Carbonato de Litio CIF Asia (China, Japón y Corea del Sur) en el mes de mayo promedió los 23.816 USD/tn LCE, marcando un aumento de 12,0% con respecto al mes anterior y del 170,6% con respecto a mayo de 2025. El precio promedio del carbonato de litio en los cinco meses de 2026 alcanzó los 20.640 USD/tn LCE, siendo este valor un 118,2% superior al precio promedio del mismo período de 2025 (9.461 USD/tn LCE).
+      <br><br>
+      En mayo de 2026, el mercado de metales mostró una evolución mixta respecto a abril, en un contexto internacional aún marcado por condiciones financieras restrictivas, con tasas de interés elevadas en Estados Unidos, un dólar fortalecido y persistentes tensiones geopolíticas. Estos factores siguieron incidiendo de manera diferenciada sobre los precios, moderando el desempeño de los metales preciosos y favoreciendo dinámicas específicas en los metales industriales y vinculados a la transición energética.
+      <br><br>
+      En este marco, la caída del precio del oro se explicó por el sesgo prudente de la Reserva Federal, en un contexto de rendimientos reales elevados y dólar firme, que aumentaron su costo de oportunidad. Por su parte, aunque la plata estuvo influenciada por el panorama financiero, su precio aumentó impulsado por la demanda industrial. Mientras que la suba del cobre estuvo sostenida por la firme demanda china asociada a sectores vinculados a redes eléctricas y energías renovables, junto con restricciones del lado de la oferta vinculadas a la escasez de concentrados y mayores costos operativos. Asimismo, el carbonato de litio mostró una suba impulsada por una demanda sólida en almacenamiento de energía y vehículos eléctricos y por limitaciones en la oferta.
+      <br><br>
+      Dado esto, en mayo se observó un incremento del 0,4% intermensual en el índice de precios de metales exportados por Argentina, el cual se mantiene en niveles altos si se lo analiza en términos históricos.
+    </p>
+
+    <!-- Segundo Gráfico (app2.js): Índice de Precios -->
+    <h2 class="section-titleGrafico"><br>Índice de precios de las exportaciones argentinas de minerales</h2>
+    <p class="chart-subtitle">En índice ene-17 = 100</p>
+    
+    <div id="chart-indice"></div>
+    <p class="source">Fuente: estimación propia de DNPyEM con base en Aduana, Banco Mundial y <u>Fastmarkets</u>.</p>
+
+    <!-- Botón de Descarga en PDF -->
+    <div class="download-container">
+      <a href="https://www.argentina.gob.ar/sites/default/files/2026.10_precios_de_los_principales_minerales.pdf" class="btn-download" target="_blank" rel="noopener noreferrer">
+        Descargar versión PDF
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="d3.v7.min.js"></script>
+  <script src="app.js"></script>
+  <script src="app2.js"></script>
+</body>
+</html>
