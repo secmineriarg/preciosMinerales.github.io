@@ -4,25 +4,23 @@ async function drawIndexChart() {
 
   const parseDate = d3.timeParse('%Y-%m-%d')
   
-  // Accesor a la columna 'indice'
   const xAccessor = d => parseDate(d.fecha)
   const yAccessor = d => parseFloat(d.indice)
 
-  // Filtrar filas que tengan un índice válido
   const validData = dataset.filter(d => !isNaN(yAccessor(d)))
 
   // 2. Dimensiones
   let dimensions = {
     width: 800,
     height: 420,
-    margins: { top: 40, right: 30, bottom: 80, left: 60 }
+    margins: { top: 30, right: 30, bottom: 80, left: 60 }
   }
 
   dimensions.ctrWidth = dimensions.width - dimensions.margins.left - dimensions.margins.right
   dimensions.ctrHeight = dimensions.height - dimensions.margins.top - dimensions.margins.bottom
 
-  // 3. Crear SVG (Adaptable con viewBox)
-  d3.select('#chart-indice').html('') // Limpia el contenedor
+  // 3. Crear SVG
+  d3.select('#chart-indice').html('')
   const svg = d3.select('#chart-indice')
     .append("svg")
     .attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`)
@@ -32,7 +30,7 @@ async function drawIndexChart() {
   const ctr = svg.append("g")
     .attr("transform", `translate(${dimensions.margins.left}, ${dimensions.margins.top})`)
 
-  // Tooltip HTML dinámico
+  // Tooltip HTML
   let tooltip = d3.select('#tooltip-indice')
   if (tooltip.empty()) {
     tooltip = d3.select('body')
@@ -67,13 +65,12 @@ async function drawIndexChart() {
     .domain(d3.extent(validData, xAccessor))
     .range([0, dimensions.ctrWidth])
 
-  // 5. Generador de Línea Curva Suave (MonotoneX)
+  // 5. Línea Curva MonotoneX
   const lineGenerator = d3.line()
     .x(d => xScale(xAccessor(d)))
     .y(d => yScale(yAccessor(d)))
     .curve(d3.curveMonotoneX)
 
-  // Dibujar la Línea (Color Celeste/Azul como la imagen)
   ctr.append('path')
     .datum(validData)
     .attr('d', lineGenerator)
@@ -82,7 +79,6 @@ async function drawIndexChart() {
     .attr('stroke-width', 3.5)
 
   // 6. Ejes
-  // Eje Y (Valores de 100 a 450)
   const yAxis = d3.axisLeft(yScale)
     .ticks(7)
     .tickFormat(d => d)
@@ -93,18 +89,16 @@ async function drawIndexChart() {
     .style("font-size", "12px")
     .style("color", "#444")
 
-  // Eje X con formato de meses en español (ene-21, mar-21, etc.)
   const mesesEsp = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
 
   const xAxis = d3.axisBottom(xScale)
-    .ticks(d3.timeMonth.every(2)) // Cada 2 meses igual que en la imagen
+    .ticks(d3.timeMonth.every(2))
     .tickFormat(d => `${mesesEsp[d.getMonth()]}-${String(d.getFullYear()).slice(-2)}`)
 
   const xAxisGroup = ctr.append('g')
     .style('transform', `translateY(${dimensions.ctrHeight}px)`)
     .call(xAxis)
 
-  // Rotación de las etiquetas del eje X para lectura vertical/inclinada
   xAxisGroup.selectAll("text")
     .style("font-size", "11px")
     .style("color", "#444")
@@ -113,7 +107,6 @@ async function drawIndexChart() {
     .attr("dx", "-.8em")
     .attr("dy", "-.4em")
 
-  // Quitar líneas de los bordes del eje para un acabado limpio
   ctr.selectAll(".domain").style("stroke", "#ccc")
 
   // 7. Tooltip e Interacción

@@ -4,12 +4,12 @@ async function draw() {
 
   const parseDate = d3.timeParse('%Y-%m-%d')
   
-  // Mapeo de pares de columnas (spot y futuro) por cada mineral
+  // Mapeo de pares de columnas
   const metrics = {
     oro: { spot: 'oro_spot', futuro: 'oro_futuro' },
     plata: { spot: 'plata_spot', futuro: 'plata_futuro' },
     cobre: { spot: 'cobre_spot', futuro: 'cobre_futuro' },
-    litio: { spot: 'litio_spot', futuro: 'litio_futuro' }
+    litio: { spot: 'litio_spot', futuro: 'litio_uturo' }
   }
 
   let selectedMetric = 'oro'
@@ -21,18 +21,18 @@ async function draw() {
     return isNaN(val) ? null : val
   }
 
-  // 2. Dimensiones (aumentamos el margen superior a 60px para acomodar la leyenda arriba)
+  // 2. Dimensiones
   let dimensions = {
     width: 800,
     height: 420,
-    margins: { top: 60, right: 40, bottom: 50, left: 60 }
+    margins: { top: 65, right: 40, bottom: 50, left: 60 }
   }
 
   dimensions.ctrWidth = dimensions.width - dimensions.margins.left - dimensions.margins.right
   dimensions.ctrHeight = dimensions.height - dimensions.margins.top - dimensions.margins.bottom
 
   // 3. Crear SVG
-  d3.select('#chart').html('') // Limpia el contenedor
+  d3.select('#chart').html('')
   const svg = d3.select('#chart')
     .append("svg")
     .attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`)
@@ -61,7 +61,7 @@ async function draw() {
 
   const tooltipDot = ctr.append('circle')
     .attr('r', 5)
-    .attr('fill', '#fc878')
+    .attr('fill', '#fc8781')
     .attr('stroke', '#000')
     .attr('stroke-width', 2)
     .style('opacity', 0)
@@ -92,34 +92,41 @@ async function draw() {
 
   const pathFuturo = ctr.append('path')
     .attr('fill', 'none')
-    .attr('stroke', '#5e5c68')
+    .attr('stroke', '#e056fd')
     .attr('stroke-width', 2.5)
     .attr('stroke-dasharray', '6 4')
 
-  // 5. Leyenda centrada en la parte superior DENTRO del SVG
-  const legend = ctr.append('g')
-    .attr('transform', `translate(${dimensions.ctrWidth / 2 - 140}, -35)`)
+  // 5. Leyenda centrada en la parte superior
+  const isMobile = window.innerWidth <= 600;
 
-  // Item 1: Spot
+  const legend = ctr.append('g')
+    .attr('transform', isMobile 
+      ? `translate(${dimensions.ctrWidth / 2 - 90}, -48)` 
+      : `translate(${dimensions.ctrWidth / 2 - 140}, -38)`
+    )
+
   legend.append('line')
     .attr('x1', 0).attr('y1', 0).attr('x2', 25).attr('y2', 0)
     .attr('stroke', '#30475e').attr('stroke-width', 2.5)
   legend.append('text')
     .attr('x', 30).attr('y', 4)
     .text('Spot (Línea Continua)')
-    .style('font-size', '12px')
+    .style('font-size', isMobile ? '11px' : '12px')
     .style('font-weight', '500')
     .style('fill', '#333')
 
-  // Item 2: Futuro
   legend.append('line')
-    .attr('x1', 160).attr('y1', 0).attr('x2', 185).attr('y2', 0)
-    .attr('stroke', '#5e5c68').attr('stroke-width', 2.5)
+    .attr('x1', isMobile ? 0 : 160)
+    .attr('y1', isMobile ? 20 : 0)
+    .attr('x2', isMobile ? 25 : 185)
+    .attr('y2', isMobile ? 20 : 0)
+    .attr('stroke', '#e056fd').attr('stroke-width', 2.5)
     .attr('stroke-dasharray', '6 4')
   legend.append('text')
-    .attr('x', 190).attr('y', 4)
+    .attr('x', isMobile ? 30 : 190)
+    .attr('y', isMobile ? 24 : 4)
     .text('Futuro (Línea Tramada)')
-    .style('font-size', '12px')
+    .style('font-size', isMobile ? '11px' : '12px')
     .style('font-weight', '500')
     .style('fill', '#333')
 
@@ -132,26 +139,22 @@ async function draw() {
 
   let currentCombinedData = []
 
-  // Función para redibujar el gráfico
   function updateChart() {
     const spotCol = metrics[selectedMetric].spot
     const futuroCol = metrics[selectedMetric].futuro
 
-    // Extraer datos spot
     const spotData = dataset.map(d => ({
       date: xAccessor(d),
       value: getValue(d, spotCol),
       type: 'Spot'
     })).filter(d => d.value !== null)
 
-    // Extraer datos futuro
     const futuroData = dataset.map(d => ({
       date: xAccessor(d),
       value: getValue(d, futuroCol),
       type: 'Futuro'
     })).filter(d => d.value !== null)
 
-    // Empalme entre spot y futuro
     let futuroConnectedData = [...futuroData]
     if (spotData.length > 0 && futuroData.length > 0) {
       const lastSpot = spotData[spotData.length - 1]
@@ -164,15 +167,13 @@ async function draw() {
 
     currentCombinedData = [...spotData, ...futuroData]
 
-    // ESCALA Y: arranca obligatoriamente en 0
+    // ESCALA Y: inicia en 0
     const maxVal = d3.max(currentCombinedData, d => d.value) || 100
     yScale.domain([0, maxVal * 1.08]).nice()
 
-    // Actualizar Eje Y
     yAxisGroup.transition().duration(500)
       .call(d3.axisLeft(yScale).tickFormat(d => `$${d}`))
 
-    // Actualizar Líneas
     pathSpot.datum(spotData)
       .transition().duration(500)
       .attr('d', lineGeneratorSpot)
@@ -182,7 +183,6 @@ async function draw() {
       .attr('d', lineGeneratorFuturo)
   }
 
-  // Render inicial
   updateChart()
 
   // 7. Eventos de los Botones
@@ -194,7 +194,7 @@ async function draw() {
     updateChart()
   })
 
-  // 8. Tooltip e Interacción
+  // 8. Tooltip
   const bisector = d3.bisector(d => d.date).left
 
   ctr.append('rect')
