@@ -4,12 +4,12 @@ async function draw() {
 
   const parseDate = d3.timeParse('%Y-%m-%d')
   
-  // Mapeo de pares de columnas
+  // Mapeo corregido con 'litio_futuro'
   const metrics = {
     oro: { spot: 'oro_spot', futuro: 'oro_futuro' },
     plata: { spot: 'plata_spot', futuro: 'plata_futuro' },
     cobre: { spot: 'cobre_spot', futuro: 'cobre_futuro' },
-    litio: { spot: 'litio_spot', futuro: 'litio_uturo' }
+    litio: { spot: 'litio_spot', futuro: 'litio_futuro' }
   }
 
   let selectedMetric = 'oro'
@@ -17,6 +17,7 @@ async function draw() {
   // Accesores
   const xAccessor = d => parseDate(d.fecha)
   const getValue = (d, column) => {
+    if (!column || !d[column]) return null
     const val = parseFloat(d[column])
     return isNaN(val) ? null : val
   }
@@ -25,7 +26,7 @@ async function draw() {
   let dimensions = {
     width: 800,
     height: 420,
-    margins: { top: 65, right: 40, bottom: 50, left: 60 }
+    margins: { top: 65, right: 40, bottom: 50, left: 65 }
   }
 
   dimensions.ctrWidth = dimensions.width - dimensions.margins.left - dimensions.margins.right
@@ -92,7 +93,7 @@ async function draw() {
 
   const pathFuturo = ctr.append('path')
     .attr('fill', 'none')
-    .attr('stroke', '#e056fd')
+    .attr('stroke', '#888888') // Color gris claro
     .attr('stroke-width', 2.5)
     .attr('stroke-dasharray', '6 4')
 
@@ -120,7 +121,8 @@ async function draw() {
     .attr('y1', isMobile ? 20 : 0)
     .attr('x2', isMobile ? 25 : 185)
     .attr('y2', isMobile ? 20 : 0)
-    .attr('stroke', '#e056fd').attr('stroke-width', 2.5)
+    .attr('stroke', '#888888') // Color gris claro
+    .attr('stroke-width', 2.5)
     .attr('stroke-dasharray', '6 4')
   legend.append('text')
     .attr('x', isMobile ? 30 : 190)
@@ -165,7 +167,7 @@ async function draw() {
       })
     }
 
-    currentCombinedData = [...spotData, ...futuroData]
+    currentCombinedData = [...spotData, ...futuroConnectedData]
 
     // ESCALA Y: inicia en 0
     const maxVal = d3.max(currentCombinedData, d => d.value) || 100
